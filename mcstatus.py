@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 """Checks the status (availability, logged-in players) on a Minecraft server.
 
-Usage:
+Example:
     $ %(prog)s host [port]
     available, 3 online: mf, dignity, viking
 
@@ -140,8 +141,14 @@ if __name__ == '__main__':
       format='%(levelname)s %(asctime)s %(filename)s:%(lineno)s: %(message)s',
       level=logging.DEBUG)
 
-  parser = argparse.ArgumentParser()
-  parser.add_argument('--port', type=int, default=DEFAULT_PORT)
+  summary_line, _, main_doc = __doc__.partition('\n\n')
+  parser = argparse.ArgumentParser(
+      description=summary_line,
+      epilog=main_doc,
+      formatter_class=argparse.RawDescriptionHelpFormatter)
+  parser.add_argument(
+      '--port', type=int, default=DEFAULT_PORT,
+      help='defaults to %d' % DEFAULT_PORT)
   parser.add_argument('host')
   args = parser.parse_args()
 
