@@ -45,12 +45,18 @@ class McServer:
     except (socket.error, ValueError) as e:
       logging.debug(e)
       return self
-    self._num_players_online = json_dict['players']['online']
-    if self._num_players_online:
-      self._player_names_sample = frozenset(
-          player_data['name'] for player_data in json_dict['players']['sample'])
-    self._available = True
-    return self
+    try:
+      self._num_players_online = json_dict['players']['online']
+      if self._num_players_online:
+        self._player_names_sample = frozenset(
+            player_data['name']
+            for player_data in json_dict['players']['sample'])
+      self._available = True
+      return self
+    except KeyError, e:
+      # happens during Minecraft server startup
+      logging.error('incomplete status: %s %s', e, json_dict)
+      return self
 
   @property
   def available(self):
