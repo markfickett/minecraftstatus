@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # Proxy the Minecraft server status response. This makes the status detailing
 # which players are online easily available as a JSON response via HTTP.
 from mcstatus import GetJson
@@ -13,7 +13,7 @@ import socket
 
 
 if __name__ == '__main__':
-  print 'Content-Type: application/json\r\n\r'
+  print('Content-Type: application/json\r\n\r')
   resp = {}
   try:
     raw_json = GetJson(HOST, DEFAULT_PORT)
@@ -21,4 +21,4 @@ if __name__ == '__main__':
     resp['players'] = raw_json.get('players')
   except (socket.error, ValueError) as e:
     pass
-  print json.dumps(resp)
+  print(json.dumps(resp))

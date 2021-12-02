@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Checks the status (availability, logged-in players) on a Minecraft server.
 
 Example:
@@ -53,7 +53,7 @@ class McServer:
             for player_data in json_dict['players']['sample'])
       self._available = True
       return self
-    except KeyError, e:
+    except KeyError as e:
       # happens during Minecraft server startup
       logging.error('incomplete status: %s %s', e, json_dict)
       return self
@@ -94,16 +94,16 @@ def GetJson(host, port=DEFAULT_PORT):
   s.connect((host, port))
 
   # Send the handshake + status request.
-  s.send(_PackData('\x00\x00' + _PackData(host.encode('utf8'))
-                   + _PackPort(port) + '\x01'))
-  s.send(_PackData('\x00'))
+  s.send(_PackData(b'\x00\x00' + _PackData(host.encode('utf8'))
+                   + _PackPort(port) + b'\x01'))
+  s.send(_PackData(b'\x00'))
 
   # Read the response.
   unused_packet_len = _UnpackVarint(s)
   unused_packet_id = _UnpackVarint(s)
   expected_response_len = _UnpackVarint(s)
 
-  data = ''
+  data = b''
   while len(data) < expected_response_len:
     data += s.recv(1024)
 
@@ -124,7 +124,7 @@ def _UnpackVarint(s):
 
 def _PackVarint(num):
   remainder = num
-  packed = ''
+  packed = b''
   while True:
     next_byte = remainder & 0x7F
     remainder >>= 7
